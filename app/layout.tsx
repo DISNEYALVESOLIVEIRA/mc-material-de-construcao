@@ -1,65 +1,65 @@
-import { Analytics } from '@vercel/analytics/next'
-import type { Metadata, Viewport } from 'next'
-import { Inter, Poppins } from 'next/font/google'
-import { CartProvider } from '@/components/cart/cart-provider'
-import { CartDrawer } from '@/components/cart/cart-drawer'
-import { SiteHeader } from '@/components/layout/site-header'
-import { SiteFooter } from '@/components/layout/site-footer'
-import { NewsletterPopup } from '@/components/marketing/newsletter-popup'
-import { CookieBanner } from '@/components/marketing/cookie-banner'
-import { WhatsappFloat } from '@/components/marketing/whatsapp-float'
-import './globals.css'
+import type { Metadata } from "next"
+import { Inter } from "next/font/google"
+import "@/app/globals.css"
+import { CartProvider } from "@/components/cart/cart-provider"
+import { CartDrawer } from "@/components/cart/cart-drawer"
+import { SiteHeader } from "@/components/layout/site-header"
+import { SiteFooter } from "@/components/layout/site-footer"
+import { CookieBanner } from "@/components/marketing/cookie-banner"
+import { NewsletterPopup } from "@/components/marketing/newsletter-popup"
+import { WhatsappFloat } from "@/components/marketing/whatsapp-float"
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['500', '600', '700', '800'],
-  variable: '--font-poppins',
-  display: 'swap',
-})
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
 export const metadata: Metadata = {
-  title: 'MC Material de Construção | Tudo para sua obra e acabamento',
+  title: {
+    default: "MC Material de Construção | Tudo para sua obra",
+    template: "%s | MC Material de Construção",
+  },
   description:
-    'Loja completa de materiais de construção e acabamento. Pisos, revestimentos, ferramentas, hidráulica, elétrica e muito mais com frete grátis para Sul e Sudeste e 5% OFF no Pix.',
-  generator: 'v0.app',
+    "Do alicerce ao acabamento: pisos, revestimentos, ferramentas, hidráulica e elétrica com entrega rápida e preço justo.",
   keywords: [
-    'material de construção',
-    'porcelanato',
-    'piso',
-    'ferramentas',
-    'acabamento',
-    'obra',
+    "material de construção",
+    "pisos",
+    "revestimentos",
+    "ferramentas",
+    "Salvador",
+    "Bairro da Paz",
+    "hidráulica",
+    "elétrica",
   ],
-}
-
-export const viewport: Viewport = {
-  colorScheme: 'light',
-  themeColor: '#ff6600',
-  userScalable: true,
+  authors: [{ name: "MC Material de Construção" }],
+  openGraph: {
+    title: "MC Material de Construção | Tudo para sua obra",
+    description: "Pisos, ferramentas, hidráulica e elétrica com o melhor preço e entrega ágil.",
+    url: "https://mc-material-de-construcao.vercel.app",
+    siteName: "MC Material de Construção",
+    locale: "pt_BR",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="pt-BR" className={`light bg-background ${inter.variable} ${poppins.variable}`}>
-      <body className="antialiased">
+    <html lang="pt-BR" className={inter.variable}>
+      <body className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased flex flex-col">
         <CartProvider>
-          {children}
+          <SiteHeader />
+          <main className="flex-1">{children}</main>
+          <SiteFooter />
           <CartDrawer />
-          <NewsletterPopup />
           <CookieBanner />
+          <NewsletterPopup />
           <WhatsappFloat />
         </CartProvider>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )

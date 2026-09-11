@@ -1,5 +1,3 @@
-import { SiteHeader } from '@/components/layout/site-header'
-import { SiteFooter } from '@/components/layout/site-footer'
 import { HeroCarousel } from '@/components/home/hero-carousel'
 import { BenefitsBar } from '@/components/home/benefits-bar'
 import { ProductShelf } from '@/components/home/product-shelf'
@@ -15,19 +13,15 @@ export default function HomePage() {
   const promocoes = products.filter((p) => p.oldPrice).slice(0, 4)
 
   return (
-    <>
-      <SiteHeader />
-      <main>
-        <HeroCarousel />
-        <BenefitsBar />
-        <ProductShelf title="Lançamentos" products={lancamentos} accent="primary" />
-        <CategoryShowcase />
-        <ProductShelf title="Destaques" products={destaques} />
-        <CountdownOffers products={promocoes} />
-        <BrandsMarquee />
-        <SecondaryBanner />
-      </main>
-      <SiteFooter />
-    </>
+    <main>
+      <HeroCarousel />
+      <BenefitsBar />
+      <ProductShelf title="Lançamentos" products={lancamentos} accent="primary" />
+      <CategoryShowcase />
+      <ProductShelf title="Destaques" products={destaques} />
+      <CountdownOffers products={promocoes} />
+      <BrandsMarquee />
+      <SecondaryBanner />
+    </main>
   )
 }
