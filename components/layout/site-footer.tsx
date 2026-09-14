@@ -14,9 +14,11 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { WhatsappIcon } from '@/components/icons/whatsapp-icon'
+import { whatsappLink, WHATSAPP_NUMBER_SECONDARY } from '@/lib/format'
 
 const institucional = [
   { label: 'Sobre a Empresa', href: '/sobre' },
+  { label: 'Promoções', href: '/promocoes' },
   { label: 'Políticas de Envio', href: '/politicas/envio' },
   { label: 'Formas de Pagamento', href: '/politicas/pagamento' },
   { label: 'Política de Privacidade', href: '/politicas/privacidade' },
@@ -28,6 +30,7 @@ const payments = ['Visa', 'Master', 'Elo', 'Pix', 'Boleto']
 export function SiteFooter() {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
+
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -61,6 +64,7 @@ export function SiteFooter() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Digite seu melhor e-mail"
                   className="h-11 flex-1 rounded-lg border border-white/20 bg-white/10 px-4 text-sm text-white outline-none placeholder:text-white/50 focus:border-primary"
+
                   aria-label="E-mail para newsletter"
                 />
                 <Button type="submit" size="lg" className="h-11 px-6 font-semibold">
@@ -88,7 +92,7 @@ export function SiteFooter() {
             entrega rápida.
           </p>
           <a
-            href="https://wa.me/5551999990000"
+            href={whatsappLink('Olá! Vim pelo site da MC Material de Construção e preciso de ajuda.')}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-lg bg-whatsapp px-4 py-2 text-sm font-semibold text-whatsapp-foreground hover:bg-whatsapp/90"
@@ -122,12 +126,26 @@ export function SiteFooter() {
           </h4>
           <ul className="space-y-3 text-sm text-white/70">
             <li className="flex items-center gap-2">
-              <Phone className="size-4 shrink-0 text-primary" />
-              (51) 3000-0000
+              <WhatsappIcon className="size-4 shrink-0 text-whatsapp" />
+              <a
+                href={whatsappLink('Olá! Vim pelo site da MC Material de Construção e preciso de ajuda.')}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary"
+              >
+                (71) 98471-6578
+              </a>
             </li>
             <li className="flex items-center gap-2">
-              <WhatsappIcon className="size-4 shrink-0 text-whatsapp" />
-              (51) 99999-0000
+              <Phone className="size-4 shrink-0 text-primary" />
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER_SECONDARY}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary"
+              >
+                (71) 98436-3256
+              </a>
             </li>
             <li className="flex items-start gap-2">
               <Clock className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -139,10 +157,11 @@ export function SiteFooter() {
             </li>
             <li className="flex items-start gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
-              Av. das Construções, 1234 - Porto Alegre/RS
+              Rua da Resistência, Nº 219 - Final de Linha do Bairro da Paz, Salvador - BA
             </li>
           </ul>
         </div>
+
 
         <div>
           <h4 className="mb-3 font-heading text-sm font-bold uppercase tracking-wide">
@@ -174,6 +193,7 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
+
 
       {/* Copyright */}
       <div className="border-t border-white/10">
