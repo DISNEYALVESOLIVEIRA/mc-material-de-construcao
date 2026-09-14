@@ -1,137 +1,94 @@
-import type { Metadata } from "next"
-import Link from "next/link"
-import { ChevronRight, PackageSearch } from "lucide-react"
-import { ProductCard } from "@/components/product/product-card"
-import { products } from "@/lib/products"
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { ChevronRight } from 'lucide-react'
+import { categories, getCategoryBySlug, getProductsByCategory } from '@/lib/products'
+import { ProductCard } from '@/components/product/product-card'
 
-interface CategoryPageProps {
-  params: Promise<{ slug: string }>
+export function generateStaticParams() {
+    return categories.map((c) => ({ slug: c.slug }))
 }
 
-const CATEGORY_MAP: Record<string, { title: string; description: string }> = {
-  "pisos-revestimentos": {
-    title: "Pisos e Revestimentos",
-    description: "Porcelanatos, pisos vinílicos, cerâmicas e argamassas com os melhores preços.",
-  },
-  ferramentas: {
-    title: "Ferramentas Manuais e Elétricas",
-    description: "Furadeiras, parafusadeiras, serras, chaves e equipamentos profissionais.",
-  },
-  hidraulica: {
-    title: "Tubos, Conexões e Hidráulica",
-    description: "Tubos de PVC, registros, caixas d'água e tudo para instalação hidráulica.",
-  },
-  eletrica: {
-    title: "Eletrodomésticos & Elétrica",
-    description: "Fios, cabos condutores, disjuntores, tomadas, interruptores e lâmpadas LED.",
-  },
-  banheiro: {
-    title: "Banheiro e Acessórios",
-    description: "Louças sanitárias, torneiras, chuveiros elétricos, gabinetes e cubas.",
-  },
-  "materiais-construcao": {
-    title: "Materiais de Construção Básicos",
-    description: "Cimento, areia, blocos, impermeabilizantes e telas para fundação e estrutura.",
-  },
-  gerais: {
-    title: "Categorias Gerais",
-    description: "Tintas, hidráulica, cozinha, ventiladores e itens essenciais para sua obra.",
-  },
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string }>
+}) {
+    const { slug } = await params
+    const category = getCategoryBySlug(slug)
+    if (!category) return { title: 'Categoria não encontrada' }
+    return {
+        title: category.label,
+        description: `Confira nossa linha completa de ${category.label.toLowerCase()} com os melhores preços e frete rápido.`,
+        openGraph: {
+            title: category.label,
+            description: `Confira nossa linha completa de ${category.label.toLowerCase()}.`,
+        },
+    }
 }
 
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-  const { slug } = await params
-  const currentCategory = CATEGORY_MAP[slug.toLowerCase()]
-  const title = currentCategory ? currentCategory.title : slug.replace(/-/g, " ")
+export default async function CategoryPage({
+    params,
+}: {
+    params: Promise<{ slug: string }>
+}) {
+    const { slug } = await params
+    const category = getCategoryBySlug(slug)
+    if (!category) notFound()
 
-  return {
-    title: `${title} | MC Material de Construção`,
-    description: currentCategory
-      ? currentCategory.description
-      : `Confira os produtos disponíveis na categoria ${title} com entrega rápida em Salvador.`,
-  }
-}
+    const products = getProductsByCategory(slug)
 
-export default async function CategoryDetailPage({ params }: CategoryPageProps) {
-  const { slug } = await params
-  const currentSlug = slug.toLowerCase()
-  const categoryInfo = CATEGORY_MAP[currentSlug]
-
-  const displayName = categoryInfo
-    ? categoryInfo.title
-    : slug.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase())
-
-  const categoryProducts = products.filter((product) => {
-    const productCategory = product.categorySlug?.toLowerCase() || ""
     return (
-      productCategory === currentSlug ||
-      productCategory.includes(currentSlug) ||
-      (currentSlug === "eletrica" && productCategory.includes("eletrod")) ||
-      (currentSlug === "materiais-construcao" && productCategory.includes("materiais"))
+        <div className="mx-auto max-w-7xl px-4 py-6">
+            <nav
+                aria-label="Trilha de navegação"
+                className="mb-6 flex flex-wrap items-center gap-1 text-sm text-muted-foreground"
+            >
+                <Link href="/" className="hover:text-primary">
+                    Início
+                </Link>
+                <ChevronRight className="h-4 w-4" />
+                <span className="text-foreground">{category.label}</span>
+            </nav>
+
+            <div className="mb-6 flex flex-col gap-2">
+                <h1 className="font-heading text-2xl font-bold text-secondary sm:text-3xl">
+                    {category.label}
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                    {products.length}{' '}
+                    {products.length === 1 ? 'produto encontrado' : 'produtos encontrados'}
+                </p>
+            </div>
+
+            {category.links.length > 0 && (
+                <div className="mb-8 flex flex-wrap gap-2">
+                    {category.links.map((link) => (
+                        <span
+                            key={link.slug}
+                            className="rounded-full border border-border bg-background px-4 py-1.5 text-sm font-medium text-muted-foreground"
+                        >
+                            {link.label}
+                        </span>
+                    ))}
+                </div>
+            )}
+
+            {products.length > 0 ? (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {products.map((product) => (
+                        <ProductCard key={product.id} product={product} />
+                    ))}
+                </div>
+            ) : (
+                <div className="rounded-xl border border-dashed border-border py-16 text-center">
+                    <p className="font-medium text-foreground">
+                        Ainda não temos produtos cadastrados nesta categoria.
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                        Volte em breve ou fale com a gente pelo WhatsApp para verificar disponibilidade.
+                    </p>
+                </div>
+            )}
+        </div>
     )
-  })
-
-  return (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
-      <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-sm text-slate-500">
-        <Link href="/" className="transition-colors hover:text-orange-600">
-          Home
-        </Link>
-        <ChevronRight className="h-4 w-4 text-slate-400" />
-        <Link href="/categoria" className="transition-colors hover:text-orange-600">
-          Categorias
-        </Link>
-        <ChevronRight className="h-4 w-4 text-slate-400" />
-        <span className="font-semibold text-slate-900">{displayName}</span>
-      </nav>
-
-      <div className="mb-8 flex flex-col justify-between gap-4 border-b border-slate-200 pb-5 md:flex-row md:items-end">
-        <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
-            {displayName}
-          </h1>
-          {categoryInfo && (
-            <p className="mt-1 max-w-2xl text-sm text-slate-500">{categoryInfo.description}</p>
-          )}
-        </div>
-        <span className="w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-          {categoryProducts.length} {categoryProducts.length === 1 ? "produto" : "produtos"}
-        </span>
-      </div>
-
-      {categoryProducts.length > 0 ? (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {categoryProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-16 text-center shadow-sm">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-            <PackageSearch className="h-8 w-8" />
-          </div>
-          <h2 className="text-lg font-bold text-slate-800">Nenhum produto encontrado nesta categoria</h2>
-          <p className="mt-1 max-w-md text-sm text-slate-500">
-            Ainda estamos cadastrando itens para {displayName}. Você pode pedir orçamentos específicos direto pelo WhatsApp.
-          </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link
-              href="/"
-              className="rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
-            >
-              Voltar ao Início
-            </Link>
-            <a
-              href="https://wa.me/5571984716578?text=Olá!%20Gostaria%20de%20consultar%20produtos%20da%20categoria%20"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700"
-            >
-              Consultar no WhatsApp
-            </a>
-          </div>
-        </div>
-      )}
-    </div>
-  )
 }
