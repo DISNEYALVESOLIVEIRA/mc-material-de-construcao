@@ -334,3 +334,15 @@ export function getProductBySlug(slug: string): Product | undefined {
 export function getRelatedProducts(product: Product, limit = 4): Product[] {
   return products.filter((p) => p.id !== product.id).slice(0, limit)
 }
+
+export function getCategoryBySlug(slug: string): Category | undefined {
+  return categories.find((c) => c.slug === slug)
+}
+
+export function getProductsByCategory(categorySlug: string): Product[] {
+  return products.filter((p) => p.categorySlug === categorySlug)
+}
+
+export function getPromotionalProducts(): Product[] {
+  return products.filter((p) => typeof p.oldPrice === 'number' && p.oldPrice > p.price)
+}

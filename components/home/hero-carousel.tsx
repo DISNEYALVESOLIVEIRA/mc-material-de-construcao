@@ -4,7 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 interface Slide {
@@ -88,9 +87,12 @@ export function HeroCarousel() {
               <p className="max-w-md text-pretty text-sm text-white/85 sm:text-base">
                 {slide.subtitle}
               </p>
-              <Button asChild size="lg" className="mt-2 h-11 w-fit px-6 text-base font-semibold">
-                <Link href={slide.href}>{slide.cta}</Link>
-              </Button>
+              <Link
+                href={slide.href}
+                className="mt-2 inline-flex h-11 w-fit items-center justify-center rounded-lg bg-primary px-6 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                {slide.cta}
+              </Link>
             </div>
           </div>
         ))}

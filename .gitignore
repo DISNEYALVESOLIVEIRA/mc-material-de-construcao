@@ -13,3 +13,9 @@ __v0_jsx-dev-runtime.ts
 node_modules
 .next/
 .DS_Store
+
+# Lockfile de gerenciador de pacotes errado (projeto usa pnpm)
+package-lock.json
+
+# Cache de build do TypeScript
+tsconfig.tsbuildinfo

@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 
 export function SecondaryBanner() {
   return (
@@ -23,11 +22,12 @@ export function SecondaryBanner() {
           <p className="max-w-md text-sm text-white/85">
             Conforto, resistência à água e instalação fácil com sistema click.
           </p>
-          <Button asChild size="lg" className="mt-2 h-11 px-6 text-base font-semibold">
-            <Link href="/categoria/pisos-revestimentos/pisos-vinilicos">
-              Conferir linha
-            </Link>
-          </Button>
+          <Link
+            href="/categoria/pisos-revestimentos/pisos-vinilicos"
+            className="mt-2 inline-flex h-11 items-center justify-center rounded-lg bg-primary px-6 text-base font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            Conferir linha
+          </Link>
         </div>
       </div>
     </section>

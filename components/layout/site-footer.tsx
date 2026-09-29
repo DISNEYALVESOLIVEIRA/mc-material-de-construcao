@@ -18,7 +18,6 @@ import { whatsappLink, WHATSAPP_NUMBER_SECONDARY } from '@/lib/format'
 
 const institucional = [
   { label: 'Sobre a Empresa', href: '/sobre' },
-  { label: 'Promoções', href: '/promocoes' },
   { label: 'Políticas de Envio', href: '/politicas/envio' },
   { label: 'Formas de Pagamento', href: '/politicas/pagamento' },
   { label: 'Política de Privacidade', href: '/politicas/privacidade' },
@@ -30,7 +29,6 @@ const payments = ['Visa', 'Master', 'Elo', 'Pix', 'Boleto']
 export function SiteFooter() {
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
-
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -64,7 +62,6 @@ export function SiteFooter() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Digite seu melhor e-mail"
                   className="h-11 flex-1 rounded-lg border border-white/20 bg-white/10 px-4 text-sm text-white outline-none placeholder:text-white/50 focus:border-primary"
-
                   aria-label="E-mail para newsletter"
                 />
                 <Button type="submit" size="lg" className="h-11 px-6 font-semibold">
@@ -162,7 +159,6 @@ export function SiteFooter() {
           </ul>
         </div>
 
-
         <div>
           <h4 className="mb-3 font-heading text-sm font-bold uppercase tracking-wide">
             Pagamento e Segurança
@@ -193,7 +189,6 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
-
 
       {/* Copyright */}
       <div className="border-t border-white/10">
